@@ -403,7 +403,7 @@ const VulkanMemorySubAllocator::MemoryBatch& VulkanMemorySubAllocator::FindSuita
 		allocatedsize += batches[i].totalsize;
 
 	if( allocatedsize + memreqs.size > maxsize )
-		throw std::bad_alloc("Memory heap is out of memory");
+		throw std::bad_alloc(); /* "Memory heap is out of memory" */
 
 	MemoryBatch				newbatch;
 	AllocationRecord		record;
@@ -419,7 +419,7 @@ const VulkanMemorySubAllocator::MemoryBatch& VulkanMemorySubAllocator::FindSuita
 	res = vkAllocateMemory(driverinfo.device, &allocinfo, NULL, &newbatch.memory);
 
 	if( res != VK_SUCCESS )
-		throw std::bad_alloc("Memory heap is out of memory");
+		throw std::bad_alloc(); /* "Memory heap is out of memory" */
 
 	newbatch.mappedcount	= 0;
 	newbatch.totalsize		= allocinfo.allocationSize;

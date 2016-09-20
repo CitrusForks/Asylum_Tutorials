@@ -1,6 +1,8 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 2010
+# Visual Studio 14
+VisualStudioVersion = 14.0.25420.1
+MinimumVisualStudioVersion = 10.0.40219.1
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "35_FixedFunction", "vc100\35_FixedFunction.vcxproj", "{F7EA0641-8334-4F3B-BB7F-AE29DAE85FEA}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "35_BasicShader", "vc100\35_BasicShader.vcxproj", "{079789BB-1D84-43D4-96B8-C54CE3952570}"

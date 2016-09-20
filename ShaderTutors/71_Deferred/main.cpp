@@ -16,8 +16,6 @@
 #define FLARES_PASS_UNIFORM_OFFSET		1280
 
 // TODO:
-// - light buffert megduplazni
-// - neha elszall a flaretex betoltesekor...
 // - alias
 
 extern long screenwidth;
