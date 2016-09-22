@@ -71,6 +71,12 @@ extern void Event_MouseUp(int x, int y, unsigned char button);
 
 static const char* instancelayers[] = {
 	"VK_LAYER_LUNARG_standard_validation",
+	"VK_LAYER_LUNARG_core_validation",
+	"VK_LAYER_LUNARG_device_limits",
+	"VK_LAYER_LUNARG_image",
+	"VK_LAYER_LUNARG_object_tracker",
+	"VK_LAYER_LUNARG_parameter_validation",
+	"VK_LAYER_LUNARG_swapchain",
 	//"VK_LAYER_RENDERDOC_Capture"
 };
 
@@ -325,7 +331,7 @@ bool InitVK(HWND hwnd)
 	deviceinfo.enabledExtensionCount	= ARRAY_SIZE(deviceextensions);
 	deviceinfo.ppEnabledLayerNames		= instancelayers;
 	deviceinfo.ppEnabledExtensionNames	= deviceextensions;
-	deviceinfo.pEnabledFeatures			= NULL;
+	deviceinfo.pEnabledFeatures			= &driverinfo.devicefeatures;
 
 #ifdef ENABLE_VALIDATION
 	deviceinfo.enabledLayerCount		= numsupportedlayers;

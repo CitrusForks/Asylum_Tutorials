@@ -1451,8 +1451,8 @@ void VulkanImage::UploadToVRAM(VkCommandBuffer commandbuffer, bool generatemips)
 		blit.dstSubresource.layerCount		= (cubemap ? 6 : 1);
 
 		for( uint32_t i = 1; i < mipmapcount; ++i ) {
-			width = (extents.width >> i);
-			height = (extents.height >> i);
+			width = std::max<uint32_t>(1, extents.width >> i);
+			height = std::max<uint32_t>(1, extents.height >> i);
 
 			blit.dstOffsets[1].x = width;
 			blit.dstOffsets[1].y = height;

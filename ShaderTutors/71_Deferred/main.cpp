@@ -464,7 +464,7 @@ void InitializeAccumPass()
 	accumpasspipeline->SetDescriptorSetLayoutImageBinding(2, VK_DESCRIPTOR_TYPE_STORAGE_IMAGE, VK_SHADER_STAGE_COMPUTE_BIT);
 	accumpasspipeline->SetDescriptorSetLayoutImageBinding(3, VK_DESCRIPTOR_TYPE_STORAGE_IMAGE, VK_SHADER_STAGE_COMPUTE_BIT);
 	accumpasspipeline->SetDescriptorSetLayoutImageBinding(4, VK_DESCRIPTOR_TYPE_STORAGE_IMAGE, VK_SHADER_STAGE_COMPUTE_BIT);
-	accumpasspipeline->SetDescriptorSetLayoutImageBinding(5, VK_DESCRIPTOR_TYPE_SAMPLED_IMAGE, VK_SHADER_STAGE_COMPUTE_BIT);
+	accumpasspipeline->SetDescriptorSetLayoutImageBinding(5, VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER, VK_SHADER_STAGE_COMPUTE_BIT);
 	accumpasspipeline->SetDescriptorSetLayoutBufferBinding(6, VK_DESCRIPTOR_TYPE_STORAGE_BUFFER_DYNAMIC, VK_SHADER_STAGE_COMPUTE_BIT);
 
 	VkDescriptorImageInfo imginfo1 = *gbuffernormals->GetImageInfo();
@@ -544,7 +544,7 @@ void InitializeForwardPass()
 		forwardpasspipeline->UpdateDescriptorSet(0, i);
 	}
 
-	forwardpasspipeline->SetDepth(VK_TRUE, VK_TRUE, VK_COMPARE_OP_LESS_OR_EQUAL);
+	forwardpasspipeline->SetDepth(VK_TRUE, VK_TRUE, VK_COMPARE_OP_LESS);
 	forwardpasspipeline->SetViewport(0, 0, (float)screenwidth, (float)screenheight);
 	forwardpasspipeline->SetScissor(0, 0, screenwidth, screenheight);
 
