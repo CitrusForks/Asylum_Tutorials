@@ -149,57 +149,7 @@ static Gdiplus::Bitmap* Win32LoadPicture(const std::wstring& file)
 		Gdiplus::GdiplusStartup(&gdiplustoken, &gdiplustartup, NULL);
 	}
 
-	HANDLE hFile = CreateFileW(
-		file.c_str(), 
-		FILE_READ_DATA,
-		FILE_SHARE_READ,
-		NULL, 
-		OPEN_EXISTING,
-		FILE_ATTRIBUTE_NORMAL,
-		NULL);
-
-	if( hFile == INVALID_HANDLE_VALUE )
-		return 0;
-
-	DWORD len = GetFileSize(hFile, NULL);
-	HGLOBAL hGlobal = GlobalAlloc(GMEM_MOVEABLE|GMEM_NODISCARD, len); // leak
-
-	if( !hGlobal )
-	{
-		CloseHandle(hFile);
-		return 0;
-	}
-
-	char* lpBuffer = reinterpret_cast<char*>(GlobalLock(hGlobal));
-	DWORD dwBytesRead = 0;
-	DWORD dwReadTotal = 0;
-
-	while( ReadFile(hFile, lpBuffer, 4096, &dwBytesRead, NULL) )
-	{
-		lpBuffer += dwBytesRead;
-
-		if( dwBytesRead == 0 )
-			break;
-
-		dwReadTotal += dwBytesRead;
-		dwBytesRead = 0;
-	}
-
-	VK_ASSERT(dwReadTotal > 0);
-
-	CloseHandle(hFile);
-	GlobalUnlock(hGlobal);
-
-	IStream* pStream = NULL;
-
-	if( CreateStreamOnHGlobal(hGlobal, FALSE, &pStream) != S_OK )
-	{
-		GlobalFree(hGlobal);
-		return 0;
-	}
-
-	Gdiplus::Bitmap* bitmap = Gdiplus::Bitmap::FromStream(pStream);
-	pStream->Release();
+	Gdiplus::Bitmap* bitmap = Gdiplus::Bitmap::FromFile(file.c_str(), FALSE);
 
 	if( bitmap->GetLastStatus() != Gdiplus::Ok ) {
 		delete bitmap;
@@ -1429,8 +1379,11 @@ void VulkanImage::UploadToVRAM(VkCommandBuffer commandbuffer, bool generatemips)
 	region.imageSubresource.layerCount		= (cubemap ? 6 : 1);
 	region.imageSubresource.mipLevel		= 0;
 
+	// NOTE: this is not really good here...
 	barrier.ImageLayoutTransfer(this, VK_ACCESS_TRANSFER_WRITE_BIT, VK_IMAGE_ASPECT_COLOR_BIT, VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL);
 	barrier.Enlist(commandbuffer);
+
+	this->StoreLayout(VK_ACCESS_TRANSFER_WRITE_BIT, VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL);
 
 	vkCmdCopyBufferToImage(commandbuffer, stagingbuffer->GetBuffer(), image, VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL, 1, &region);
 
