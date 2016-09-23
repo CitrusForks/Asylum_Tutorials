@@ -77,6 +77,8 @@ static const char* instancelayers[] = {
 	"VK_LAYER_LUNARG_object_tracker",
 	"VK_LAYER_LUNARG_parameter_validation",
 	"VK_LAYER_LUNARG_swapchain",
+	"VK_LAYER_GOOGLE_threading",
+	"VK_LAYER_GOOGLE_unique_objects",
 	//"VK_LAYER_RENDERDOC_Capture"
 };
 
@@ -480,9 +482,9 @@ void UninitVK()
 		vkDestroyDevice(driverinfo.device, 0);
 		vkDestroySurfaceKHR(driverinfo.inst, driverinfo.surface, 0);
 
-	#ifdef ENABLE_VALIDATION
+#ifdef ENABLE_VALIDATION
 		driverinfo.vkDestroyDebugReportCallbackEXT(driverinfo.inst, driverinfo.callback, 0);
-	#endif
+#endif
 
 		vkDestroyInstance(driverinfo.inst, NULL);
 	}

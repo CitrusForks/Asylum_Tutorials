@@ -242,6 +242,7 @@ bool InitScene()
 
 	// load model
 	model = VulkanBasicMesh::LoadFromQM("../media/meshes/sponza/sponza.qm");
+	VK_ASSERT(model);
 
 	std::cout << "Generating tangent frame...\n";
 	model->GenerateTangentFrame();
@@ -281,7 +282,7 @@ bool InitScene()
 	ambientcube = VulkanImage::CreateFromDDSCubemap("../media/textures/uffizi_diff_irrad.dds", false);
 	VK_ASSERT(ambientcube);
 
-	flaretexture = VulkanImage::CreateFromFile("../media/textures/flare1.jpg", true);
+	flaretexture = VulkanImage::CreateFromFile("../media/textures/flare1.png", true);
 	VK_ASSERT(flaretexture);
 
 	// generate particles

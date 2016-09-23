@@ -172,6 +172,7 @@ static Gdiplus::Bitmap* Win32LoadPicture(const std::wstring& file)
 
 	char* lpBuffer = reinterpret_cast<char*>(GlobalLock(hGlobal));
 	DWORD dwBytesRead = 0;
+	DWORD dwReadTotal = 0;
 
 	while( ReadFile(hFile, lpBuffer, 4096, &dwBytesRead, NULL) )
 	{
@@ -180,8 +181,11 @@ static Gdiplus::Bitmap* Win32LoadPicture(const std::wstring& file)
 		if( dwBytesRead == 0 )
 			break;
 
+		dwReadTotal += dwBytesRead;
 		dwBytesRead = 0;
 	}
+
+	VK_ASSERT(dwReadTotal > 0);
 
 	CloseHandle(hFile);
 	GlobalUnlock(hGlobal);
