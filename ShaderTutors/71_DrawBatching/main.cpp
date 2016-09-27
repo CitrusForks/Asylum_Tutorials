@@ -879,7 +879,7 @@ void Event_KeyUp(unsigned char keycode)
 				}
 			}
 
-			printf("Visible tiles: %u\n", visibletiles.size());
+			printf("Visible tiles: %llu\n", visibletiles.size());
 			printf("Visible polygons: %u\n", visiblepolys);
 			printf("Last FPS: %d\n", framerate);
 		}

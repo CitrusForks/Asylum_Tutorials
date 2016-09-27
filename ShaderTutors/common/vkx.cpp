@@ -502,7 +502,7 @@ VulkanRefCountable::VulkanRefCountable()
 
 VulkanRefCountable::~VulkanRefCountable()
 {
-	VK_ASSERT(refcount == 0);
+	assert(refcount == 0);
 }
 
 void VulkanRefCountable::AddRef()
@@ -3051,6 +3051,12 @@ void VulkanPipelineBarrierBatch::Enlist(VkCommandBuffer commandbuffer)
 		vkCmdPipelineBarrier(commandbuffer, src, dst, 0, 0, NULL, (uint32_t)buffbarriers.size(), bbarriers, (uint32_t)imgbarriers.size(), ibarriers);
 }
 
+void VulkanPipelineBarrierBatch::Reset()
+{
+	buffbarriers.clear();
+	imgbarriers.clear();
+}
+
 void VulkanPipelineBarrierBatch::Reset(VkPipelineStageFlags srcstage, VkPipelineStageFlags dststage)
 {
 	src = srcstage;
@@ -3262,12 +3268,13 @@ void VulkanSubmitTempCommandBuffer(VkCommandBuffer commandbuffer, bool wait)
 	res = vkQueueSubmit(driverinfo.graphicsqueue, 1, &submitinfo, VK_NULL_HANDLE);
 	VK_ASSERT(res == VK_SUCCESS);
 
-	if( wait )
-	{
+	if( wait ) {
 		res = vkQueueWaitIdle(driverinfo.graphicsqueue);
 		VK_ASSERT(res == VK_SUCCESS);
 
 		vkFreeCommandBuffers(driverinfo.device, driverinfo.commandpool, 1, &commandbuffer);
+	} else {
+		// TODO: !!!
 	}
 }
 
