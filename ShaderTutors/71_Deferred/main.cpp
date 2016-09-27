@@ -110,7 +110,7 @@ bool InitScene()
 	VkAttachmentReference	depthreference		= {};
 
 	VkSubpassDescription	subpasses[2];
-	VkSubpassDependency		dependency			= {};
+	VkSubpassDependency		dependencies[2];
 	VkRenderPassCreateInfo	renderpassinfo		= {};
 	VkFramebufferCreateInfo	framebufferinfo		= {};
 	VkResult				res;
@@ -220,13 +220,21 @@ bool InitScene()
 	subpasses[1].preserveAttachmentCount	= 0;
 	subpasses[1].pPreserveAttachments		= NULL;
 
-	dependency.srcSubpass		= 0;
-	dependency.srcAccessMask	= VK_ACCESS_COLOR_ATTACHMENT_WRITE_BIT;
-	dependency.srcStageMask		= VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT;
-	dependency.dstSubpass		= 1;
-	dependency.dstAccessMask	= VK_ACCESS_INPUT_ATTACHMENT_READ_BIT;
-	dependency.dstStageMask		= VK_PIPELINE_STAGE_FRAGMENT_SHADER_BIT;
-	dependency.dependencyFlags	= 0;
+	dependencies[0].srcSubpass		= VK_SUBPASS_EXTERNAL;
+	dependencies[0].srcAccessMask	= VK_ACCESS_COLOR_ATTACHMENT_WRITE_BIT|VK_ACCESS_DEPTH_STENCIL_ATTACHMENT_WRITE_BIT;
+	dependencies[0].srcStageMask	= VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT;
+	dependencies[0].dstSubpass		= 0;
+	dependencies[0].dstAccessMask	= VK_ACCESS_COLOR_ATTACHMENT_WRITE_BIT|VK_ACCESS_DEPTH_STENCIL_ATTACHMENT_WRITE_BIT;
+	dependencies[0].dstStageMask	= VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT;
+	dependencies[0].dependencyFlags	= VK_DEPENDENCY_BY_REGION_BIT;
+
+	dependencies[1].srcSubpass		= 0;
+	dependencies[1].srcAccessMask	= VK_ACCESS_COLOR_ATTACHMENT_WRITE_BIT|VK_ACCESS_DEPTH_STENCIL_ATTACHMENT_WRITE_BIT;
+	dependencies[1].srcStageMask	= VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT;
+	dependencies[1].dstSubpass		= 1;
+	dependencies[1].dstAccessMask	= VK_ACCESS_INPUT_ATTACHMENT_READ_BIT;
+	dependencies[1].dstStageMask	= VK_PIPELINE_STAGE_FRAGMENT_SHADER_BIT;
+	dependencies[1].dependencyFlags	= VK_DEPENDENCY_BY_REGION_BIT;
 
 	renderpassinfo.sType			= VK_STRUCTURE_TYPE_RENDER_PASS_CREATE_INFO;
 	renderpassinfo.pNext			= NULL;
@@ -234,8 +242,8 @@ bool InitScene()
 	renderpassinfo.pAttachments		= rpattachments;
 	renderpassinfo.subpassCount		= 2;
 	renderpassinfo.pSubpasses		= subpasses;
-	renderpassinfo.dependencyCount	= 1;
-	renderpassinfo.pDependencies	= &dependency;
+	renderpassinfo.dependencyCount	= VK_ARRAY_SIZE(dependencies);
+	renderpassinfo.pDependencies	= dependencies;
 
 	res = vkCreateRenderPass(driverinfo.device, &renderpassinfo, NULL, &mainrenderpass);
 	VK_ASSERT(res == VK_SUCCESS);
